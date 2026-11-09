@@ -1,0 +1,555 @@
+/* Base: reset, type, controls and shared pieces. Values come from tokens.css. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + var(--space-4));
+}
+
+/* The booking sheet is open: the page behind stays still. */
+html.is-locked {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--paper);
+  color: var(--ink-soft);
+  font-family: var(--font-text);
+  font-size: var(--text-md);
+  font-weight: var(--weight-text);
+  font-stretch: var(--stretch-text);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-kerning: normal;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  letter-spacing: var(--heading-tracking);
+  line-height: var(--leading-heading);
+  color: var(--ink);
+  font-stretch: var(--heading-stretch);
+  text-wrap: balance;
+}
+
+/* The owner's *emphasis*: the highlight — the words in the brand colour (Emphasis). */
+h1 em,
+h2 em,
+h3 em {
+  font-weight: var(--heading-light-weight);
+}
+
+.hl {
+  font-style: normal;
+  color: var(--accent);
+}
+
+p,
+dl,
+dd,
+figure,
+ol,
+ul {
+  margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: var(--hairline);
+  text-underline-offset: 0.22em;
+}
+
+a:hover {
+  text-decoration-thickness: var(--rule-strong);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+
+::selection {
+  background: var(--sage-200);
+  color: var(--ink);
+}
+
+main:focus {
+  outline: none;
+}
+
+/* A hyphenated word in a heading stays whole (Emphasis). */
+.nowrap {
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: var(--hairline);
+  height: var(--hairline);
+  padding: 0;
+  margin: calc(var(--hairline) * -1);
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.prewrap {
+  white-space: pre-line;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: var(--space-4);
+  z-index: var(--layer-banner);
+  padding: var(--space-3) var(--space-4);
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  transform: translateY(-300%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* ── Layout ───────────────────────────────────────────────── */
+
+.page {
+  width: 100%;
+  max-width: calc(var(--page-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-pad);
+}
+
+.section-head {
+  display: grid;
+  gap: var(--space-4);
+  max-width: var(--measure);
+  margin-bottom: var(--space-8);
+  justify-items: start;
+}
+
+.section-head h2 {
+  font-size: var(--text-2xl);
+}
+
+.section-intro {
+  font-size: var(--text-lg);
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+/* Small labels: Figtree in tight capitals with tabular figures. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* A small honey dot before a label — the punched hole of the groom card. */
+.eyebrow::before,
+.drop {
+  content: '';
+  display: inline-block;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--ply);
+  flex: none;
+}
+
+.quiet-state {
+  color: var(--muted);
+  max-width: var(--measure);
+}
+
+/* ── Controls ─────────────────────────────────────────────── */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: var(--control);
+  padding: 0 var(--space-6);
+  border: var(--hairline) solid var(--accent);
+  border-radius: var(--radius-button);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: var(--weight-strong);
+  font-stretch: var(--stretch-label);
+  letter-spacing: var(--tracking-button);
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease-soft),
+    border-color var(--dur-quick) var(--ease-soft),
+    transform var(--dur-quick) var(--ease-soft);
+}
+
+.button:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.button:active {
+  transform: translateY(var(--hairline));
+}
+
+.button:disabled {
+  cursor: progress;
+  background: var(--accent-strong);
+}
+
+.button--large {
+  min-height: calc(var(--control) + var(--space-1));
+  padding-inline: var(--space-7);
+  font-size: var(--text-md);
+}
+
+.button--small {
+  min-height: var(--tap);
+  padding-inline: var(--space-5);
+  font-size: var(--text-sm);
+}
+
+.button--on-dark {
+  background: var(--on-forest);
+  border-color: var(--on-forest);
+  color: var(--forest);
+}
+
+.button--on-dark:hover {
+  background: var(--paper);
+  border-color: var(--paper);
+}
+
+.button--on-dark:focus-visible {
+  outline-color: var(--on-forest);
+}
+
+/* On the signal-coloured booking band: a steel button. */
+.button--on-signal {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-forest);
+}
+
+.button--on-signal:hover {
+  background: var(--forest-3);
+  border-color: var(--forest-3);
+}
+
+.button--on-signal:focus-visible {
+  outline-color: var(--on-accent);
+}
+
+.button__arrow {
+  display: inline-block;
+  transition: transform var(--dur-quick) var(--ease-soft);
+}
+
+.button:hover .button__arrow {
+  transform: translateX(0.2em);
+}
+
+.quiet-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--ink);
+  font-weight: var(--weight-strong);
+  text-decoration: underline;
+  text-decoration-color: var(--line-soft);
+  text-decoration-thickness: var(--hairline);
+  text-underline-offset: 0.4em;
+  transition: text-decoration-color var(--dur-quick) var(--ease-soft);
+}
+
+.quiet-link:hover {
+  text-decoration-color: var(--ink);
+  text-decoration-thickness: var(--hairline);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  padding-inline: var(--space-4);
+  border: var(--hairline) solid var(--line-soft);
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease-soft),
+    border-color var(--dur-quick) var(--ease-soft),
+    color var(--dur-quick) var(--ease-soft);
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.button--quiet {
+  background: transparent;
+  color: var(--accent);
+}
+
+.button--quiet:hover {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+}
+
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-weight: var(--weight-strong);
+  text-decoration: underline;
+  text-decoration-thickness: var(--hairline);
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration-thickness: var(--rule-strong);
+}
+
+.link-button:disabled {
+  color: var(--muted);
+  cursor: default;
+  text-decoration: none;
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--tap);
+  block-size: var(--tap);
+  padding: 0;
+  border: var(--hairline) solid var(--line-input);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color var(--dur-quick) var(--ease-soft);
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--oat);
+}
+
+.icon-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.busy {
+  inline-size: 1em;
+  block-size: 1em;
+  flex: none;
+  border-radius: var(--radius-pill);
+  border: var(--rule-strong) solid currentColor;
+  border-right-color: transparent;
+  animation: spin var(--dur-spin) linear infinite;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-5);
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--sage-200);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-tag);
+  text-transform: uppercase;
+  line-height: var(--leading-tight);
+  white-space: nowrap;
+}
+
+.notice {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+  margin-block: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-left: var(--rule-strong) solid var(--accent);
+  border-radius: 0 var(--radius-1) var(--radius-1) 0;
+  background: var(--accent-wash);
+  color: var(--ink);
+}
+
+.notice--error {
+  border-left-color: var(--clay);
+  background: var(--clay-wash);
+}
+
+.notice__text {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.notice__contact a {
+  font-weight: var(--weight-strong);
+}
+
+/* ── Photos ───────────────────────────────────────────────── */
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--oat-deep);
+}
+
+.frame picture,
+.frame img {
+  width: 100%;
+  height: 100%;
+}
+
+.frame img {
+  object-fit: cover;
+}
+
+/* ── Loading ──────────────────────────────────────────────── */
+
+.skeleton {
+  display: block;
+  border-radius: var(--radius-1);
+  background: linear-gradient(90deg, var(--oat-deep), var(--oat), var(--oat-deep));
+  background-size: 200% 100%;
+  animation: shimmer var(--dur-shimmer) ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: scale(var(--settle-scale));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .skeleton {
+    animation: none;
+  }
+
+  .busy {
+    animation: none;
+    border-right-color: currentColor;
+    opacity: 0.6;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

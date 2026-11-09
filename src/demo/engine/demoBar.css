@@ -1,0 +1,468 @@
+/* VENDORED from booking-niche-packs/shared/demo-engine — edit it there, then run scripts/sync-shared.mjs. */
+/* The Live Demo dock (DemoBar.tsx): a small floating capsule of frosted glass.
+   Self-contained — literal, neutral colours and the system font, no site or
+   dashboard tokens — so it reads the same over any design, light or dark.
+   Fixed to the viewport and outside the page flow: it adds no space anywhere. */
+
+.bdock {
+  --bdock-ink: #1d1d1f;
+  --bdock-ink-soft: #3a3a3c;
+  --bdock-muted: #636366;
+  --bdock-focus: #0a6cff;
+  --bdock-hover: rgba(0, 0, 0, 0.06);
+  --bdock-press: rgba(0, 0, 0, 0.1);
+  --bdock-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --bdock-x: 0px;
+  --bdock-lift: 0px;
+  --bdock-enter: 10px;
+  position: fixed;
+  z-index: 2147482000; /* above the page; any modal <dialog> still sits above it (top layer) */
+  left: 20px;
+  bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px));
+  color: var(--bdock-ink);
+  font: 500 13px/1.2 -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, system-ui, sans-serif;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  opacity: 0;
+  transform: translate3d(var(--bdock-x), calc(var(--bdock-lift) + var(--bdock-enter)), 0);
+  transition:
+    opacity 320ms var(--bdock-ease),
+    transform 420ms var(--bdock-ease),
+    visibility 0s linear 0s;
+}
+
+.bdock.is-in {
+  --bdock-enter: 0px;
+  opacity: 1;
+}
+
+/* A modal is open, or the keyboard is up: step aside (not focusable: inert). */
+.bdock.is-aside {
+  --bdock-enter: 14px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    transform 260ms ease,
+    visibility 0s linear 260ms;
+}
+
+.bdock *,
+.bdock *::before,
+.bdock *::after {
+  box-sizing: border-box;
+}
+
+/* ── The capsule ─────────────────────────────────────────── */
+
+.bdock-bar,
+.bdock-pop {
+  /* Frosted but dense enough that busy page text never reads through the labels. */
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 12px 32px -10px rgba(0, 0, 0, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.07);
+}
+
+/* "Reduce transparency" (or no backdrop blur at all): solid, so text never shows through. */
+@media (prefers-reduced-transparency: reduce) {
+  .bdock-bar,
+  .bdock-pop {
+    background: rgba(250, 250, 250, 0.97);
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .bdock-bar,
+  .bdock-pop {
+    background: rgba(250, 250, 250, 0.96);
+  }
+}
+
+.bdock-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  transition: box-shadow 600ms ease;
+}
+
+.bdock-bar > * {
+  transition: opacity 600ms ease;
+}
+
+/* After a few quiet seconds it softens: the glass stays solid (the page never
+   shows through the labels); only its contents and shadow quieten. Hover, focus
+   or a tap brings it back. */
+.bdock.is-resting .bdock-bar {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 6px 18px -10px rgba(0, 0, 0, 0.22);
+}
+
+.bdock.is-resting .bdock-bar > * {
+  opacity: 0.6;
+}
+
+.bdock:hover .bdock-bar > *,
+.bdock:focus-within .bdock-bar > * {
+  opacity: 1;
+}
+
+.bdock-sep {
+  flex: none;
+  width: 1px;
+  height: 18px;
+  margin: 0 2px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.bdock-status,
+.bdock-btn,
+.bdock-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  min-width: 34px;
+  margin: 0;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.bdock-icon {
+  padding: 0;
+  color: var(--bdock-ink-soft);
+}
+
+.bdock-status:hover,
+.bdock-btn:hover,
+.bdock-icon:hover,
+.bdock-icon[aria-expanded='true'],
+.bdock-status[aria-expanded='true'] {
+  background: var(--bdock-hover);
+}
+
+.bdock-status:active,
+.bdock-btn:active,
+.bdock-icon:active {
+  background: var(--bdock-press);
+  transform: scale(0.97);
+}
+
+.bdock :focus-visible {
+  outline: 2px solid var(--bdock-focus);
+  outline-offset: 1px;
+}
+
+.bdock svg {
+  flex: none;
+  display: block;
+}
+
+/* The status: an amber dot (a demo, not a live business) and the label. */
+.bdock-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #f5a524;
+  box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.22);
+}
+
+.bdock-label {
+  font-weight: 600;
+}
+
+/* Compact: the dock found no clear spot at full width — icons only (names stay in aria-label). */
+.bdock.is-compact .bdock-label,
+.bdock.is-compact .bdock-text-label {
+  display: none;
+}
+
+.bdock.is-compact .bdock-status,
+.bdock.is-compact .bdock-btn {
+  padding: 0 11px;
+}
+
+/* After a request is made: the Dashboard button turns ink, with a small dot. */
+.bdock-btn {
+  position: relative;
+  font-weight: 560;
+}
+
+.bdock-btn.is-hint {
+  background: var(--bdock-ink);
+  color: #fff;
+}
+
+.bdock-btn.is-hint:hover {
+  background: #000;
+}
+
+.bdock-badge {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #ff453a;
+  box-shadow: 0 0 0 2px #1d1d1f;
+}
+
+.bdock-live {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Menu and cards (above the capsule) ──────────────────── */
+
+.bdock-pop {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  min-width: 212px;
+  padding: 6px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.82);
+  transform-origin: 20% 100%;
+  animation: bdock-pop 180ms var(--bdock-ease) both;
+}
+
+.bdock-pop--card {
+  width: min(300px, calc(100vw - 32px));
+  padding: 14px 14px 12px;
+}
+
+@keyframes bdock-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.bdock-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 36px;
+  margin: 0;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--bdock-ink);
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bdock-item svg {
+  color: var(--bdock-ink-soft);
+}
+
+.bdock-item:hover,
+.bdock-item:focus-visible {
+  background: var(--bdock-hover);
+}
+
+.bdock-item:focus-visible {
+  outline-offset: -2px;
+}
+
+.bdock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: -4px -6px 4px 0;
+}
+
+.bdock-icon--small {
+  height: 28px;
+  min-width: 28px;
+}
+
+.bdock-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--bdock-ink);
+}
+
+.bdock-row .bdock-title {
+  margin: 0;
+}
+
+.bdock-text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.45;
+  color: var(--bdock-ink-soft);
+}
+
+.bdock-text + .bdock-text {
+  margin-top: 6px;
+}
+
+.bdock-text--muted {
+  color: var(--bdock-muted);
+}
+
+.bdock-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.bdock-action {
+  height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--bdock-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bdock-action:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.bdock-action--strong {
+  background: var(--bdock-ink);
+  color: #fff;
+}
+
+.bdock-action--strong:hover {
+  background: #000;
+}
+
+/* ── Touch: 44 px targets ────────────────────────────────── */
+
+@media (pointer: coarse) {
+  .bdock-status,
+  .bdock-btn,
+  .bdock-icon {
+    height: 40px;
+    min-width: 40px;
+  }
+
+  .bdock-item {
+    min-height: 44px;
+  }
+
+  .bdock-action {
+    height: 40px;
+  }
+}
+
+/* ── Phones: bottom-centre ───────────────────────────────── */
+
+/* Centred with margins, not left: 50% + translate: a fixed box's untransformed
+   position still counts towards page overflow on some pages. */
+@media (max-width: 640px) {
+  .bdock {
+    left: 0;
+    right: 0;
+    width: max-content;
+    max-width: calc(100% - 24px);
+    margin-inline: auto;
+    bottom: max(16px, calc(env(safe-area-inset-bottom) + 10px));
+  }
+
+  /* Framed in a phone mock-up (the Profit Studio viewer draws a home bar). */
+  .bdock.is-embedded {
+    bottom: 24px;
+  }
+
+  .bdock-pop {
+    left: 50%;
+    width: 240px;
+    min-width: 0;
+    margin-left: -120px;
+    transform-origin: 50% 100%;
+  }
+
+  .bdock-pop--card {
+    --bdock-card: min(300px, calc(100vw - 32px));
+    width: var(--bdock-card);
+    margin-left: calc(var(--bdock-card) / -2);
+  }
+}
+
+@media (max-width: 340px) {
+  .bdock-status,
+  .bdock-btn {
+    padding: 0 10px;
+  }
+}
+
+/* ── Reduced motion, print ───────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bdock,
+  .bdock.is-aside,
+  .bdock-bar,
+  .bdock-bar > *,
+  .bdock-status,
+  .bdock-btn,
+  .bdock-icon {
+    transition: none;
+  }
+
+  .bdock {
+    --bdock-enter: 0px;
+  }
+
+  .bdock-pop {
+    animation: none;
+  }
+}
+
+@media print {
+  #booking-demo-bar {
+    display: none;
+  }
+}

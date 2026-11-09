@@ -1,0 +1,67 @@
+{
+  "package": "@profitstudio/booking-engine",
+  "version": "2.0.0-beta.3",
+  "schemaVersion": "2.0.0-alpha.10",
+  "migrations": [
+    {
+      "id": "0001_core",
+      "file": "supabase/migrations/20261102221400_booking_engine_0001_core.sql",
+      "sha256": "6a7f3da20ba39b4dc1ae68014bc7feb1b5d9ef0542062d1c9c6322d5b979a793",
+      "schemaVersion": "2.0.0-alpha.1"
+    },
+    {
+      "id": "0002_security_hardening",
+      "file": "supabase/migrations/20261102221401_booking_engine_0002_security_hardening.sql",
+      "sha256": "8ab0dca712ecf7a668b3843077194e2094fe9cfed189159a29e10edbbc77bacf",
+      "schemaVersion": "2.0.0-alpha.2"
+    },
+    {
+      "id": "0003_private_definers_and_holds",
+      "file": "supabase/migrations/20261102221402_booking_engine_0003_private_definers_and_holds.sql",
+      "sha256": "1f3c76419f637a9e73757bdc5af24ff125639a0b61387433a6dde9c5cc473f63",
+      "schemaVersion": "2.0.0-alpha.3"
+    },
+    {
+      "id": "0004_verified_requests",
+      "file": "supabase/migrations/20261102221403_booking_engine_0004_verified_requests.sql",
+      "sha256": "aeb84aa8d363b3a48cfaa7735ef5edbaea7983bba6daf9f9682beecdcf591eae",
+      "schemaVersion": "2.0.0-alpha.4"
+    },
+    {
+      "id": "0005_scoped_mailer_credential",
+      "file": "supabase/migrations/20261102221404_booking_engine_0005_scoped_mailer_credential.sql",
+      "sha256": "de5d252b0d0c91e1d48f5e7089a67e2eaa11adc52323012d68329cf4c0f6721d",
+      "schemaVersion": "2.0.0-alpha.5"
+    },
+    {
+      "id": "0006_trusted_client_ip",
+      "file": "supabase/migrations/20261102221405_booking_engine_0006_trusted_client_ip.sql",
+      "sha256": "78b5cb79baf432d1d25c7327db641b5c47e372be558d9448ae49044151d0b02b",
+      "schemaVersion": "2.0.0-alpha.6"
+    },
+    {
+      "id": "0007_site_content",
+      "file": "supabase/migrations/20261102221406_booking_engine_0007_site_content.sql",
+      "sha256": "ad40fa3bc6d361bc4869501a40e441e4a700e6ca16c6e5219245d3f259429e1b",
+      "schemaVersion": "2.0.0-alpha.7"
+    },
+    {
+      "id": "0008_service_images_opening_times",
+      "file": "supabase/migrations/20261102221407_booking_engine_0008_service_images_opening_times.sql",
+      "sha256": "7bd73c7a71cf11cfcf1c20c00072f2bd163f6656af6314186e95a107b26ff6b8",
+      "schemaVersion": "2.0.0-alpha.10"
+    }
+  ],
+  "functions": {
+    "booking-mailer": {
+      "files": {
+        "deno.json": "c25c8af2f700c9c4cfb5a196599bfeb99c854a0569f44c12a2e25d41bda27363",
+        "index.ts": "1423dd378fcb992bb68946e5e21d65feacdb22b69402d8e573c06b5b6d4c5f2c",
+        "mailer.js": "11c53e03288c9e757dc994a0e9505fd6f46dbb131d23af20782b683073c361ac",
+        "providers/index.js": "ee8198ff49270aeb2b5a7b25a6dafc9238c4f4efcd48a4e3f478f94540d1a37f",
+        "providers/resend.js": "2c27d90fbfb1f905f2ec607eabea9ef8f64f8d8b337be8aba54011ecccbdb783",
+        "templates.js": "f045094490f3f86ddd2939ac3de965f3a64b1b161225dc7f9655a65f44d42de9"
+      }
+    }
+  }
+}

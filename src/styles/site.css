@@ -1,0 +1,1785 @@
+/*
+ * Groom Card — the page. Mobile first; tokens only (tokens.css).
+ *
+ * A clean, calm grooming studio in daylight: warm cream and oat grounds, navy
+ * ink, a round friendly serif for headlines, one brand colour (cobalt by
+ * default) for everything you can press, and honey only for small edges. The
+ * one recurring object is the groom card — the record a good groomer keeps for
+ * every dog: it sits on the first screen, its tabs become the size picker in
+ * the price list, its punched hole is the dot before a label, and its honey
+ * edge runs under the booking sheet's header.
+ *
+ * Composition: editorial and left-aligned, two columns on wide screens, no
+ * ornament beyond the card. Photos are rounded like card stock; nothing moves
+ * except a short, one-time settle on the first screen.
+ */
+
+/* ── Shared pieces ────────────────────────────────────────── */
+
+.section-head h2 {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-display);
+  max-width: 18ch;
+}
+
+.section-head .section-intro {
+  max-width: 52ch;
+}
+
+/* A section's label (SectionMark.tsx): an index-card tab — the number on a honey wash, then the name. */
+.section-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-mark__n {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 2.25rem;
+  block-size: 1.5rem;
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-1) var(--radius-1) 0 0;
+  border-bottom: var(--rule-strong) solid var(--ply);
+  background: var(--honey-wash);
+  color: var(--ink);
+}
+
+.section-mark--on-accent {
+  color: var(--on-accent);
+}
+
+.sample-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.tag--on-photo {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1;
+  background: color-mix(in oklab, var(--raised) 92%, transparent);
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.open-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.open-status__dot {
+  inline-size: var(--status-dot);
+  block-size: var(--status-dot);
+  border-radius: var(--radius-pill);
+  background: var(--muted);
+  flex: none;
+}
+
+.open-status[data-open='true'] .open-status__dot {
+  background: var(--mark);
+  box-shadow: 0 0 0 3px var(--mark-halo);
+}
+
+/* Photographs: rounded like card stock. */
+.hero__photo,
+.gallery__frame,
+.step__visual,
+.studio__photo {
+  border-radius: var(--radius-photo);
+}
+
+.gallery__frame,
+.step__visual {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton--service {
+  block-size: 6rem;
+  margin-bottom: var(--space-3);
+}
+
+.skeleton--row {
+  block-size: 1.5rem;
+  margin-bottom: var(--space-2);
+}
+
+/* ── Banners ──────────────────────────────────────────────── */
+
+.banner {
+  position: relative;
+  z-index: var(--layer-banner);
+  padding: var(--space-2) var(--gutter);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.banner p {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.banner--preview {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.banner--draft {
+  background: var(--accent-tint);
+  color: var(--ink);
+}
+
+.banner__dot {
+  inline-size: var(--status-dot);
+  block-size: var(--status-dot);
+  border-radius: var(--radius-pill);
+  background: var(--ply);
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--layer-header);
+  background: color-mix(in oklab, var(--paper) 94%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: var(--hairline) solid var(--rule);
+  transition: border-color var(--dur-step) var(--ease-soft);
+}
+
+.site-header[data-at-top] {
+  border-bottom-color: transparent;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  min-height: var(--header-height);
+}
+
+.site-header__home {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--ink);
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* The name mark's tag: a tiny groom card in the brand colour, with its punched hole. */
+.wordmark__tag {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  inline-size: calc(var(--text-wordmark) * 0.82);
+  block-size: calc(var(--text-wordmark) * 1.02);
+  border-radius: 0.3rem;
+  background: var(--accent);
+}
+
+.wordmark__tag::after {
+  content: '';
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  inline-size: 26%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+}
+
+.wordmark__words {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.wordmark__text {
+  font-family: var(--font-display);
+  font-size: var(--text-wordmark);
+  font-weight: 400;
+  letter-spacing: var(--tracking-wordmark);
+  line-height: 1;
+  color: var(--ink);
+}
+
+.wordmark__descriptor {
+  font-size: 0.6875rem;
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.wordmark__logo {
+  block-size: var(--logo-height);
+  inline-size: auto;
+  max-inline-size: var(--logo-max);
+  object-fit: contain;
+}
+
+.site-nav {
+  display: none;
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.site-header__wide {
+  display: none;
+}
+
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  min-width: var(--tap);
+  padding-inline: var(--space-4);
+  border: var(--hairline) solid var(--line-input);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.site-menu {
+  border-top: var(--hairline) solid var(--rule);
+  background: var(--paper);
+  padding-block: var(--space-3) var(--space-5);
+}
+
+.site-menu ul {
+  list-style: none;
+  display: grid;
+}
+
+.site-menu a {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  min-height: calc(var(--tap) + var(--space-2));
+  padding-block: var(--space-2);
+  border-bottom: var(--hairline) solid var(--rule);
+  color: var(--ink);
+  font-family: var(--heading-font);
+  font-size: var(--text-xl);
+  text-decoration: none;
+}
+
+.site-menu__n {
+  font-family: var(--font-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+@media (max-width: 380px) {
+  .wordmark__descriptor {
+    display: none;
+  }
+
+  .site-header__inner {
+    gap: var(--space-3);
+  }
+
+  .menu-toggle {
+    padding-inline: var(--space-3);
+  }
+}
+
+@media (min-width: 1040px) {
+  .site-nav {
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  .site-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-pill);
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+    font-weight: 560;
+    text-decoration: none;
+  }
+
+  .site-nav a:hover {
+    color: var(--ink);
+    background: var(--sage-100);
+  }
+
+  .menu-toggle,
+  .site-menu {
+    display: none;
+  }
+
+  .site-header__wide {
+    display: inline;
+  }
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+/* Words left, a calm dog in daylight right, the groom card tucked over the photo's lower-left
+   corner. Phones: a wider crop of the same photo first (≤ 38 % of the screen), then the
+   headline and Book button inside the first screen, then the facts and the card. */
+
+.hero {
+  overflow-x: clip;
+  padding-block: var(--space-3) var(--space-8);
+}
+
+.hero__inner {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.hero__visual {
+  position: relative;
+}
+
+.hero__photo {
+  aspect-ratio: 5 / 4;
+  max-block-size: 38svh;
+  inline-size: 100%;
+}
+
+.hero__photo img {
+  /* The default shows its own 5:4 phone crop here; an owner's upright photo keeps the upper middle. */
+  object-position: 50% 30%;
+  animation: settle var(--dur-photo) var(--ease-settle) both;
+}
+
+.hero__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.hero__title {
+  font-size: var(--text-hero);
+  line-height: var(--leading-display);
+  max-width: 13ch;
+}
+
+.hero__lede {
+  font-size: var(--text-lg);
+  max-width: var(--measure-lede);
+  color: var(--ink-soft);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+}
+
+.hero__prices {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--ink);
+  font-weight: var(--weight-strong);
+  text-decoration-color: var(--ply);
+  text-decoration-thickness: var(--rule-strong);
+}
+
+.hero__prices:hover {
+  text-decoration-color: var(--accent);
+}
+
+.hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid var(--rule);
+  inline-size: 100%;
+  max-inline-size: 34rem;
+}
+
+.hero__facts div {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.hero__facts dt {
+  white-space: nowrap;
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hero__facts dd {
+  color: var(--ink);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__enter {
+  animation: rise var(--dur-enter) var(--ease-settle) both;
+}
+
+.hero__title.hero__enter {
+  animation-delay: var(--stagger);
+}
+
+.hero__lede.hero__enter {
+  animation-delay: calc(var(--stagger) * 2);
+}
+
+.hero__actions.hero__enter {
+  animation-delay: calc(var(--stagger) * 3);
+}
+
+.hero__facts.hero__enter {
+  animation-delay: calc(var(--stagger) * 4);
+}
+
+/* The desk card lives on the photo; the phone card follows the text. */
+.hero__card--desk {
+  display: none;
+}
+
+/* Phones: the Book button comes before the lede, so it is inside the first screen even at 320 × 568. */
+@media (max-width: 959px) {
+  .hero__eyebrow {
+    order: 0;
+  }
+
+  .hero__title {
+    order: 1;
+  }
+
+  .hero__actions {
+    order: 2;
+  }
+
+  .hero__lede {
+    order: 3;
+  }
+
+  .hero__facts {
+    order: 4;
+  }
+
+  .hero__card--phone {
+    order: 5;
+    margin-top: var(--space-3);
+  }
+}
+
+@media (max-width: 959px) and (max-height: 700px) {
+  .hero__photo {
+    max-block-size: 31svh;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero__actions .button {
+    inline-size: 100%;
+  }
+}
+
+@media (min-width: 960px) {
+  .hero {
+    padding-block: var(--space-4) var(--space-8);
+  }
+
+  .hero__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+    align-items: center;
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+  }
+
+  .hero__visual {
+    order: 2;
+    justify-self: end;
+    inline-size: 100%;
+    /* The photo is never taller than the screen below the header (1280 × 720 → 620 px). */
+    max-inline-size: calc(var(--hero-photo-h) * 0.8);
+  }
+
+  .hero__photo {
+    aspect-ratio: 4 / 5;
+    max-block-size: var(--hero-photo-h);
+  }
+
+  .hero__photo img {
+    object-position: 50% 40%;
+  }
+
+  .hero__text {
+    order: 1;
+    gap: var(--space-5);
+    padding-block: var(--space-6);
+  }
+
+  .groom-card.hero__card--desk {
+    display: block;
+    position: absolute;
+    /* Hung off the photo's lower-left corner, over the blinds — never over the dog. */
+    left: calc(clamp(4.5rem, 7.5vw, 8rem) * -1);
+    bottom: calc(var(--space-6) * -1);
+    inline-size: var(--card-w);
+    animation: card-in var(--dur-enter) var(--ease-settle) calc(var(--stagger) * 6) both;
+  }
+
+  .hero__card--phone {
+    display: none;
+  }
+
+  .hero__facts {
+    max-inline-size: none;
+    flex-wrap: nowrap;
+    column-gap: var(--space-7);
+  }
+
+  /* No photo: the card returns beside the words. */
+  .hero--text-only .hero__card--phone {
+    display: block;
+    max-inline-size: var(--card-w);
+  }
+}
+
+@media (min-width: 960px) and (max-height: 760px) {
+  .hero__text {
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+  }
+
+  .hero__title {
+    font-size: clamp(2.375rem, 1.2rem + 3.2vw, 4rem);
+  }
+
+  .hero__lede {
+    font-size: var(--text-md);
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise)) rotate(-1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-1.5deg);
+  }
+}
+
+/* ── The groom card (GroomCard.tsx) ───────────────────────── */
+/* A cream index card: a punched hole, a small "Groom card" tab, the title in the serif and
+   ruled lines in honey. On the first screen it leans a degree, as if just laid on the photo. */
+
+.groom-card {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 24rem;
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--raised);
+  box-shadow: var(--shadow-print), 0 0 0 var(--hairline) var(--rule);
+  color: var(--ink-soft);
+}
+
+.groom-card.hero__card--desk {
+  transform: rotate(-1.5deg);
+}
+
+.groom-card__hole {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  inline-size: var(--hole);
+  block-size: var(--hole);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  box-shadow: inset 0 1px 2px rgb(29 34 50 / 0.25);
+}
+
+.groom-card__label {
+  display: inline-block;
+  margin-bottom: var(--space-2);
+  padding: 0.125rem var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--honey-wash);
+  color: var(--ink);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.groom-card__title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-card);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+  padding-right: var(--space-5);
+}
+
+.groom-card__lines {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-3);
+}
+
+.groom-card__lines li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-block-size: 2rem;
+  border-bottom: var(--hairline) solid var(--ply);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+/* An empty tick box before each line: the card is filled in by hand at the studio. */
+.groom-card__lines li::before {
+  content: '';
+  flex: none;
+  inline-size: 0.8rem;
+  block-size: 0.8rem;
+  border: 1.5px solid var(--line-input);
+  border-radius: 3px;
+}
+
+.groom-card__note {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+/* ── 01 Services & prices ─────────────────────────────────── */
+
+.services {
+  padding-top: var(--space-7);
+}
+
+.services__head {
+  margin-bottom: var(--space-6);
+}
+
+.menu {
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* The size picker: index-card tabs on a ruled line; the chosen tab joins the card below it. */
+.sizes {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.sizes__label {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sizes__tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.size-tab {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  gap: 0.125rem;
+  min-block-size: calc(var(--tap) + var(--space-3));
+  padding: var(--space-2) var(--space-4);
+  border: var(--hairline) solid var(--line-soft);
+  border-radius: var(--radius-1);
+  background: var(--raised);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease-soft),
+    border-color var(--dur-quick) var(--ease-soft);
+}
+
+.size-tab:hover {
+  border-color: var(--accent);
+}
+
+.size-tab__name {
+  font-weight: 700;
+  line-height: var(--leading-tight);
+}
+
+.size-tab__range {
+  font-size: var(--text-xs);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.size-tab[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.size-tab[aria-pressed='true'] .size-tab__range {
+  color: var(--on-accent-soft);
+}
+
+.sizes__note {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.menu__kinds {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.kind {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.kind__head {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.kind__title {
+  font-size: var(--text-xl);
+}
+
+.kind__note {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  max-width: 34ch;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  border-top: var(--rule-strong) solid var(--ink);
+}
+
+.item {
+  display: grid;
+  gap: var(--space-3);
+  padding-block: var(--space-5);
+  border-bottom: var(--hairline) solid var(--rule);
+}
+
+.item__main {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.item__thumb {
+  inline-size: var(--service-thumb);
+  block-size: var(--service-thumb);
+  border-radius: var(--radius-1);
+  object-fit: cover;
+}
+
+.item__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--text-service);
+  line-height: var(--leading-tight);
+}
+
+/* The dog size from the name — a small tab, like the size picker's. */
+.item__size,
+.pick__size {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.0625rem var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--honey-wash);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-strong);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.item__lead {
+  color: var(--ink-soft);
+  max-width: 60ch;
+}
+
+.item__for {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.item__for-label {
+  margin-right: var(--space-1);
+  color: var(--ink);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.item__end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+}
+
+.item__time {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.item__price {
+  color: var(--ink);
+  font-size: var(--text-price);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.item__from {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-strong);
+  color: var(--muted);
+}
+
+.item__book {
+  margin-left: auto;
+}
+
+/* The honest note about starting prices. */
+.price-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  max-inline-size: 52rem;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-2);
+  background: var(--oat);
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.price-note__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .sizes__tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-inline-size: 48rem;
+  }
+}
+
+@media (min-width: 720px) {
+  .item {
+    grid-template-columns: minmax(0, 1fr) var(--item-end);
+    column-gap: var(--space-6);
+  }
+
+  .item__end {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: end;
+    justify-items: end;
+    align-content: start;
+    column-gap: var(--space-4);
+    row-gap: var(--space-2);
+  }
+
+  .item__time {
+    grid-column: 1 / -1;
+  }
+
+  .item__price {
+    grid-column: 1 / -1;
+  }
+
+  .item__book {
+    grid-column: 1 / -1;
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .kind {
+    grid-template-columns: var(--kind-aside) minmax(0, 1fr);
+    column-gap: var(--space-8);
+  }
+
+  .kind__head {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-5));
+    padding-top: var(--space-4);
+  }
+}
+
+/* ── 02 Gallery ───────────────────────────────────────────── */
+/* Six frames in a fixed rhythm: on wide screens a 12-column grid (wide 7 + upright 5,
+   upright 5 + wide 7, then two wides); phones two columns, wides across both. */
+
+.gallery {
+  padding-top: 0;
+}
+
+.gallery__head {
+  margin-bottom: var(--space-6);
+}
+
+.gallery__grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* Phones: two columns; wide frames across both. */
+.gallery__row {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-3);
+}
+
+.gallery__item--landscape {
+  grid-column: 1 / -1;
+}
+
+.gallery__item figure {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.gallery__photo--landscape {
+  aspect-ratio: 3 / 2;
+}
+
+.gallery__photo--portrait {
+  aspect-ratio: 4 / 5;
+}
+
+.gallery__caption {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+/* Wider screens: justified rows — each photo grows by its aspect ratio, so a row shares one
+   height and every frame stays whole (3 + 3; a removed photo just closes the gap). */
+@media (min-width: 720px) {
+  .gallery__row {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .gallery__item {
+    flex: var(--ar) 1 0%;
+    min-inline-size: 0;
+  }
+}
+
+/* ── 03 A groom, start to finish (oat band) ───────────────── */
+/* Four steps on one lead line: on wide screens four columns (photo, then the moment, the title
+   and the text); phones a column with the photo beside each step. */
+
+.band {
+  background: var(--oat);
+}
+
+.experience__head {
+  margin-bottom: var(--space-7);
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-6);
+}
+
+.step {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: var(--space-4);
+  align-items: start;
+  align-content: start;
+}
+
+.step--no-photo {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.step__photo {
+  aspect-ratio: 4 / 5;
+}
+
+.step__text {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.step__when {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.step__n {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--text-xs);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.step__title {
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+}
+
+.step__body {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+@media (min-width: 720px) and (max-width: 1023px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-7) var(--space-6);
+  }
+
+  .step {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  .step {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .step__title {
+    font-size: var(--text-xl);
+  }
+}
+
+/* ── 04 The studio ────────────────────────────────────────── */
+
+.studio__grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.studio__head {
+  margin-bottom: 0;
+}
+
+.studio__photos {
+  position: relative;
+  padding-bottom: var(--space-8);
+}
+
+.studio__photos--single {
+  padding-bottom: 0;
+}
+
+.studio__room {
+  position: relative;
+}
+
+.studio__photo--room {
+  aspect-ratio: 3 / 2;
+}
+
+.studio__detail {
+  position: absolute;
+  right: var(--space-4);
+  bottom: 0;
+  inline-size: 34%;
+}
+
+.studio__photo--detail {
+  aspect-ratio: 4 / 5;
+  border: 5px solid var(--paper);
+  box-shadow: var(--shadow-print);
+}
+
+.studio__photos--single .studio__detail {
+  position: relative;
+  right: auto;
+  inline-size: min(100%, 22rem);
+}
+
+.studio__text {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  max-width: var(--measure);
+}
+
+.studio__lead {
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.studio__facts {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.studio__facts div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: var(--hairline) solid var(--rule);
+}
+
+/* A small tick in the brand colour: a care standard kept. */
+.studio__facts div::before {
+  content: '';
+  grid-row: 1 / span 2;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  margin-top: 0.15rem;
+  border-radius: var(--radius-pill);
+  border: 0.3rem solid var(--accent-tint);
+  background: var(--accent);
+}
+
+.studio__facts dt {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.studio__facts dd {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+@media (min-width: 640px) {
+  .studio__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .studio__grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: var(--space-8);
+    align-items: start;
+  }
+
+  .studio__head {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .studio__photos {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+
+  .studio__text {
+    grid-column: 2;
+  }
+
+  .studio__facts {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: var(--space-6);
+  }
+}
+
+/* ── 05 Good to know (oat) ────────────────────────────────── */
+
+.faq {
+  background: var(--oat);
+}
+
+.faq__grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.faq__head {
+  margin-bottom: 0;
+  align-content: start;
+}
+
+.faq__list {
+  inline-size: 100%;
+  border-top: var(--rule-strong) solid var(--ink);
+}
+
+.qa {
+  border-bottom: var(--hairline) solid var(--line-soft);
+}
+
+.qa summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: calc(var(--tap) + var(--space-4));
+  padding-block: var(--space-3);
+  list-style: none;
+  cursor: pointer;
+}
+
+.qa summary::-webkit-details-marker {
+  display: none;
+}
+
+.qa__q {
+  font-size: var(--text-lg);
+  font-weight: 650;
+  color: var(--ink);
+  line-height: var(--leading-tight);
+}
+
+.qa__icon {
+  position: relative;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+  flex: none;
+}
+
+.qa__icon::before,
+.qa__icon::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto;
+  block-size: var(--rule-strong);
+  margin-top: -1px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transition: transform var(--dur-step) var(--ease-soft);
+}
+
+.qa__icon::after {
+  transform: rotate(90deg);
+}
+
+.qa[open] .qa__icon::after {
+  transform: rotate(0);
+}
+
+.qa__a {
+  padding-bottom: var(--space-5);
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+@media (min-width: 1024px) {
+  .faq__grid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    column-gap: var(--space-8);
+    align-items: start;
+  }
+
+  .faq__head {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+  }
+}
+
+/* ── Booking band (brand colour) ──────────────────────────── */
+
+.book {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.book h2 {
+  color: var(--on-accent);
+}
+
+/* The highlight on the brand-colour band turns honey-white, underlined by a soft rule. */
+.book .hl {
+  color: var(--on-accent);
+  text-decoration: underline;
+  text-decoration-color: var(--ply);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
+}
+
+.book .section-intro {
+  color: var(--on-accent);
+}
+
+.book :focus-visible {
+  outline-color: var(--on-accent);
+}
+
+.book__grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.book__head {
+  margin-bottom: 0;
+}
+
+.eyebrow--signal {
+  color: var(--on-accent);
+}
+
+.book__how {
+  display: grid;
+  gap: var(--space-6);
+  justify-items: start;
+  inline-size: 100%;
+}
+
+.book__steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+  inline-size: 100%;
+}
+
+.book__steps li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--space-4);
+  row-gap: var(--space-1);
+  align-content: start;
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid color-mix(in oklab, var(--on-accent) 55%, var(--accent));
+}
+
+.book__n {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: var(--radius-pill);
+  background: var(--on-accent);
+  color: var(--accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.book__step {
+  color: var(--on-accent);
+  font-weight: 700;
+  font-size: var(--text-lg);
+}
+
+.book__text {
+  font-size: var(--text-sm);
+  color: var(--on-accent);
+}
+
+.book__loading {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.book .skeleton {
+  background: linear-gradient(90deg, var(--accent-strong), var(--accent), var(--accent-strong));
+  background-size: 200% 100%;
+}
+
+.book .contact-instead,
+.book .notice {
+  color: var(--on-accent);
+}
+
+.book .notice {
+  background: var(--accent-strong);
+  border-left-color: var(--on-accent);
+}
+
+.book .contact-instead a,
+.book .link-button {
+  color: var(--on-accent);
+}
+
+/* Booking off on the brand-colour band: white title, the main contact as a white button. */
+.book .contact-instead__title {
+  color: var(--on-accent);
+}
+
+.book .contact-instead .button:not(.button--quiet) {
+  background: var(--on-accent);
+  border-color: var(--on-accent);
+  color: var(--accent);
+}
+
+.book .contact-instead .button:not(.button--quiet):hover {
+  background: var(--paper);
+}
+
+.book .button--quiet {
+  border-color: var(--on-accent);
+  color: var(--on-accent);
+}
+
+.book .button--quiet:hover {
+  background: var(--accent-strong);
+}
+
+.button--on-signal {
+  background: var(--on-accent);
+  border-color: var(--on-accent);
+  color: var(--accent);
+}
+
+.button--on-signal:hover {
+  background: var(--paper);
+  border-color: var(--paper);
+}
+
+@media (min-width: 1024px) {
+  .book__grid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    column-gap: var(--space-8);
+    align-items: start;
+  }
+
+  .book__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--space-5);
+  }
+
+  .book__steps li {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-2);
+  }
+
+  .book__n {
+    grid-row: auto;
+  }
+}
+
+/* ── 06 Visit ─────────────────────────────────────────────── */
+
+.visit__head {
+  margin-bottom: var(--space-7);
+}
+
+.visit__grid {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.visit__col {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+
+.visit__col h3 {
+  font-family: var(--font-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--rule-strong) solid var(--ink);
+}
+
+.hours {
+  display: grid;
+}
+
+.hours__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-2);
+  border-bottom: var(--hairline) solid var(--rule);
+}
+
+.hours__row dt {
+  color: var(--ink);
+}
+
+.hours__row dd {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.hours__row--today dt,
+.hours__row--today dd {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.hours__row--today dt::after {
+  content: '';
+  display: inline-block;
+  inline-size: 0.45em;
+  block-size: 0.45em;
+  margin-left: 0.5em;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  vertical-align: 0.1em;
+}
+
+.hours-changes h4 {
+  font-family: var(--font-text);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  margin-top: var(--space-3);
+}
+
+.hours-changes ul {
+  list-style: none;
+  padding: 0;
+  font-size: var(--text-sm);
+}
+
+.contact {
+  display: grid;
+  gap: var(--space-1);
+  font-style: normal;
+}
+
+.contact__name {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.contact a {
+  color: var(--ink);
+  text-decoration-color: var(--line-soft);
+  justify-self: start;
+  min-height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .visit__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--space-7);
+  }
+}
+
+/* ── Footer (navy) ────────────────────────────────────────── */
+
+.site-footer {
+  background: var(--forest);
+  color: var(--on-forest-soft);
+  padding-block: var(--space-8) max(var(--space-6), env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+
+.site-footer a:not(.button) {
+  color: var(--on-forest);
+}
+
+.site-footer :focus-visible {
+  outline-color: var(--on-forest);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.site-footer__brand {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+}
+
+.site-footer__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18em;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: var(--text-footer-name);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--on-forest);
+}
+
+.wordmark__tag--footer {
+  inline-size: 0.62em;
+  block-size: 0.78em;
+  border-radius: 0.12em;
+  background: var(--accent-glow);
+}
+
+.wordmark__tag--footer::after {
+  background: var(--forest);
+}
+
+.site-footer__tagline {
+  max-width: 40ch;
+}
+
+.site-footer .button {
+  background: var(--on-forest);
+  border-color: var(--on-forest);
+  color: var(--forest);
+}
+
+.site-footer .button:hover {
+  background: var(--paper);
+}
+
+.site-footer__label {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--on-forest-faint);
+  margin-bottom: var(--space-2);
+}
+
+.site-footer__col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.site-footer__col a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  text-decoration: none;
+}
+
+.site-footer__col a:hover {
+  text-decoration: underline;
+}
+
+.site-footer__contact {
+  display: grid;
+  gap: var(--space-1);
+  font-style: normal;
+}
+
+.site-footer__contact a {
+  justify-self: start;
+}
+
+.site-footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid var(--forest-line-strong);
+  font-size: var(--text-xs);
+  color: var(--on-forest-faint);
+}
+
+.site-footer__staff {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+}
+
+@media (min-width: 900px) {
+  .site-footer__inner {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1fr);
+    column-gap: var(--space-8);
+  }
+}
+
+/* ── Phones and reduced motion ────────────────────────────── */
+
+@media (max-width: 719px) {
+  .section-head {
+    margin-bottom: var(--space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__photo img,
+  .hero__enter,
+  .hero__card--desk {
+    animation: none;
+  }
+}

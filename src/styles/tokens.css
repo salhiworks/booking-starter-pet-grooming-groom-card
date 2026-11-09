@@ -1,0 +1,231 @@
+/*
+ * Brindle Grooming Studio — design tokens (Groom Card).
+ * The ONLY file with raw colours, fonts, sizes and spacing (see DESIGN.md).
+ * Every other stylesheet uses these custom properties.
+ *
+ * The idea: a clean, calm grooming room in daylight, and the groom card a good
+ * groomer keeps for every dog. Warm cream and oat grounds (fresh towels), navy
+ * ink for type, honey (a golden coat) only for small decorative edges, and one
+ * brand colour — cobalt by default, owner-editable — for everything you can
+ * press. Young Serif, round and friendly, for headlines; Figtree for everything
+ * else, with tabular figures for times and prices. Soft corners: photos and
+ * cards are rounded like the card stock, buttons are pills.
+ *
+ * Token names are shared with the other Niche Pack starters (so booking.css
+ * reads the same everywhere); the comments say what each one is here.
+ */
+:root {
+  /* ── Colour ─────────────────────────────────────────────── */
+  --paper: #f8f4ec;          /* warm cream — a clean towel; the page */
+  --raised: #fffdf9;         /* card white — inputs, the booking sheet, the groom card */
+  --oat: #efe7d8;            /* oat — the groom band, Good to know, the booking summary */
+  --oat-deep: #e3d8c4;       /* frames while loading, skeletons */
+  --sage-100: #f3ece0;       /* quiet highlights */
+  --sage-200: #e7dccb;       /* tags, done steps */
+  --rule: #ddd1bd;           /* hairlines (decorative) */
+  --line-input: #7a7266;     /* input and icon-button borders (≥ 3:1 on cream, card white, oat) */
+  --line-soft: #b4a994;      /* borders of choice buttons named by their own text */
+  --mark: #2f7a4a;           /* the "open" dot (≥ 3:1) */
+  --ink: #1d2232;            /* navy ink — 15:1 on the page */
+  --ink-soft: #343a4b;       /* 11:1 */
+  --muted: #5e5a52;          /* 6.3:1 on the page, 5.6:1 on oat */
+  --clay: #a3261a;           /* errors only (with an icon or words, never colour alone) */
+  --ply: #d9a45b;            /* honey — a golden coat; decorative only (rules, the card's tab, the sheet's edge) */
+  --honey-wash: #f4e4c8;     /* the groom card's ruled lines and tab */
+  --scrim: rgb(29 34 50 / 0.08);
+  --veil: rgb(20 24 36 / 0.58); /* the page behind the booking sheet */
+  --clay-wash: color-mix(in oklab, var(--clay) 6%, var(--raised));
+  --mark-halo: color-mix(in oklab, var(--mark) 22%, transparent);
+
+  /* Navy ink: the booking sheet's header and the footer (never owner-editable). */
+  --forest: #1b2236;         /* night navy */
+  --forest-2: #232b42;       /* a raised panel */
+  --forest-3: #2e3752;       /* a lifted panel, hover */
+  --on-forest: #f8f4ec;      /* 15:1 on navy */
+  --on-forest-soft: #ccd0da; /* 11:1 */
+  --on-forest-faint: #a0a7b8; /* 6.9:1 — small print on navy only */
+  --forest-line: #343d57;    /* decorative rules on navy */
+  --forest-line-strong: #4f5875;
+  --light: #ffffff;
+
+  /* Owner-editable (brand.accent) — set on <html> at run time. */
+  --accent: #2b4c9e;
+  --accent-strong: color-mix(in oklab, var(--accent) 84%, #000);
+  --accent-deep: color-mix(in oklab, var(--accent) 55%, #000);
+  --accent-tint: color-mix(in oklab, var(--accent) 12%, var(--raised));
+  --accent-wash: color-mix(in oklab, var(--accent) 6%, var(--raised));
+  --on-accent: #ffffff;      /* white on cobalt, 8:1 (the editor checks any new colour at 4.5:1) */
+  /* The brand colour on navy: lifted so it reads on the dark (focus, the business name). */
+  --accent-glow: color-mix(in oklab, var(--accent) 45%, #e3e9ff);
+  --on-accent-soft: color-mix(in oklab, var(--on-accent) 88%, var(--accent));
+
+  /* ── Type ───────────────────────────────────────────────── */
+  --font-display: 'Young Serif', 'Iowan Old Style', Georgia, serif;
+  --font-text: 'Figtree Variable', 'Avenir Next', 'Segoe UI', Arial, sans-serif;
+  --font-sans-display: 'Figtree Variable', 'Avenir Next', 'Segoe UI', Arial, sans-serif;
+  /* No monospace: small labels and figures use Figtree with tabular figures. */
+  --font-mono: var(--font-text);
+
+  --text-micro: 0.75rem;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-md: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.06rem + 0.3vw, 1.3125rem);
+  --text-xl: clamp(1.375rem, 1.2rem + 0.7vw, 1.875rem);
+  --text-2xl: clamp(2.125rem, 1.6rem + 2.2vw, 3.5rem);
+  --text-3xl: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  --text-hero: clamp(2.375rem, 1.45rem + 3.6vw, 4.75rem);
+    --text-statement: clamp(1.5rem, 1.15rem + 1.4vw, 2.375rem);
+    --text-numeral: clamp(2.25rem, 1.8rem + 1.8vw, 3.25rem);
+  --text-code: clamp(1.875rem, 1.6rem + 1.2vw, 2.375rem);
+  --text-step: clamp(1.5rem, 1.32rem + 0.6vw, 1.875rem);  /* a booking step's heading */
+  --text-sheet: clamp(1.1875rem, 1.1rem + 0.3vw, 1.375rem); /* the booking sheet's title */
+  --text-service: clamp(1.1875rem, 1.1rem + 0.35vw, 1.4375rem);
+  --text-price: clamp(1.25rem, 1.12rem + 0.45vw, 1.5rem);
+  --text-fact: clamp(1.0625rem, 0.98rem + 0.3vw, 1.25rem);
+  --text-wordmark: clamp(1.375rem, 1.27rem + 0.4vw, 1.625rem);
+  --text-footer-name: clamp(3.5rem, 1.6rem + 7vw, 8rem);
+  --text-card: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+
+  --leading-display: 1.04;
+  --leading-heading: 1.08;
+  --leading-body: 1.6;
+  --leading-tight: 1.28;
+
+  --tracking-display: -0.012em;
+  --tracking-eyebrow: 0.12em;
+  --tracking-button: 0.005em;
+  --tracking-code: 0.42em;
+  --tracking-tag: 0.08em;
+  --tracking-wordmark: -0.01em;
+  --tracking-mono: 0.02em;
+
+  --weight-text: 400;
+  --weight-strong: 600;
+  --weight-display: 400;   /* Young Serif has one weight */
+  --weight-sans-display: 680;
+
+  /* No width axis; kept for the shared booking styles. */
+  --stretch-display: 100%;
+  --stretch-label: 100%;
+  --stretch-text: 100%;
+
+  /* Heading style (brand.headings): serif (default) | sans */
+  --heading-font: var(--font-display);
+  --heading-weight: var(--weight-display);
+  --heading-stretch: var(--stretch-display);
+  --heading-tracking: var(--tracking-display);
+  --heading-light-weight: var(--weight-display);
+
+  --measure: 62ch;
+  --measure-lede: 42ch;
+  --measure-title: 14ch;
+
+  /* ── Space ──────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8.5rem;
+
+  --gutter: clamp(1rem, 4.5vw, 4.5rem);
+  --section-pad: clamp(4.5rem, 2.4rem + 6.4vw, 8.5rem);
+  --desk-pad: clamp(var(--space-5), 4vw, var(--space-8));
+  --page-max: 80rem;
+  --header-height: 4.25rem;
+  --sheet-width: 60rem;      /* the booking sheet from 960 px */
+
+  /* ── Sizes ──────────────────────────────────────────────── */
+  --tap: 2.75rem;            /* 44 px — the smallest tap target */
+  --control: 3.25rem;        /* 52 px — buttons */
+  --input: 3rem;             /* 48 px — inputs in the booking sheet */
+  --chip: 2.75rem;           /* 44 px — time chips (the smallest tap target) */
+  --day-cell: 2.75rem;       /* 44 px — month grid cells */
+  --day-card-w: 4rem;        /* 64 px — phone day rail */
+  --day-card-h: 5.25rem;     /* 84 px */
+  --dot: 0.3125rem;          /* 5 px — the "open" mark */
+  --drop: 0.75rem;           /* 12 px */
+  --tag-w: 0.82em;           /* the name mark's little groom card */
+  --tag-h: 1.02em;
+  --edge: 4px;               /* the honey edge under the booking sheet's header */
+  --hole: 0.75rem;           /* the groom card's punched hole */
+  --card-w: 16rem;         /* the groom card on the first screen */
+  --hairline: 1px;
+  --rule-strong: 2px;
+  --focus-width: 2px;
+  --focus-offset: 3px;
+  --logo-height: 1.75rem;
+  --logo-max: 11rem;
+  --summary-width: 17rem;
+  --time-min: 6rem;          /* a time chip's narrowest width */
+  --label-col: 7rem;
+  --form-max: 34rem;
+  --code-width: 15rem;
+  --code-height: 4rem;
+  --sticky-offset: 6rem;     /* room above a step heading for the phone summary strip */
+  --kind-aside: 17rem;       /* a kind's title column in the menu */
+  --item-end: 13.5rem;       /* a menu row's time, price and Book column */
+  --service-thumb: 4rem;     /* an owner's service photo in the menu */
+  --hero-photo-h: calc(100svh - var(--header-height) - var(--space-7)); /* the first screen's photo, desktop */
+  --status-dot: 0.5rem;
+  --skeleton-block: 20rem;
+  --skeleton-times: 9rem;
+
+  /* ── Shape ──────────────────────────────────────────────── */
+  /* Card stock and towels: soft corners; buttons are pills. */
+  --radius-0: 0;
+  --radius-1: 8px;           /* inputs, chips, small controls */
+  --radius-2: 16px;          /* the booking sheet, cards */
+  --radius-photo: 22px;      /* photographs */
+  --radius-button: 999px;
+  --radius-nail: 50%;        /* round marks (kept name: shared booking styles) */
+  --radius-pill: 999px;
+  --shadow-soft: 0 -0.5rem 1.5rem var(--scrim);
+  --shadow-top: 0 0.5rem 1.5rem var(--scrim);
+  --shadow-print: 0 1.25rem 2.5rem -1.25rem rgb(29 34 50 / 0.32);
+  --shadow-sheet: -1.5rem 0 4rem rgb(20 24 36 / 0.26);
+
+  /* ── Motion ─────────────────────────────────────────────── */
+  --dur-quick: 160ms;
+  --dur-step: 280ms;
+  --dur-enter: 620ms;
+  --dur-photo: 900ms;
+  --dur-sheet: 420ms;
+  --stagger: 70ms;
+  --dur-shimmer: 1600ms;
+  --dur-spin: 900ms;
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --rise: 0.875rem;
+  --settle-scale: 1.035;
+
+  /* ── Layers ─────────────────────────────────────────────── */
+  --layer-sticky: 5;
+  --layer-banner: 10;
+  --layer-header: 8;
+}
+
+:root[data-headings='sans'] {
+  --heading-font: var(--font-sans-display);
+  --heading-weight: var(--weight-sans-display);
+  --heading-light-weight: var(--weight-sans-display);
+  --heading-tracking: -0.025em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-quick: 1ms;
+    --dur-step: 1ms;
+    --dur-enter: 1ms;
+    --dur-photo: 1ms;
+    --dur-sheet: 1ms;
+    --stagger: 0ms;
+    --rise: 0px;
+    --settle-scale: 1;
+  }
+}

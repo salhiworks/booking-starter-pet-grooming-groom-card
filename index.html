@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en-US" data-headings="serif">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Brindle Grooming Studio — dog grooming in Linden Hills, Minneapolis</title>
+    <meta name="description" content="A calm, one-dog-at-a-time grooming studio in Linden Hills, Minneapolis. Full grooms, baths, deshedding, puppy introductions and nail trims — see prices by size and book online." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Brindle Grooming Studio — dog grooming in Linden Hills, Minneapolis" />
+    <meta property="og:description" content="A calm, one-dog-at-a-time grooming studio in Linden Hills, Minneapolis. Full grooms, baths, deshedding, puppy introductions and nail trims — see prices by size and book online." />
+    <meta name="theme-color" content="#f8f4ec" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- The hero photo (the default in src/content/site.ts) and its phone crop; sizes must match HERO_SIZES / PHONE_CROP in src/components/Hero.tsx. -->
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      media="(min-width: 960px)"
+      imagesrcset="/photos/hero-paw-800.avif 800w, /photos/hero-paw-1200.avif 1200w, /photos/hero-paw-1600.avif 1600w"
+      imagesizes="40vw"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      media="(max-width: 959px)"
+      imagesrcset="/photos/hero-paw-wide-480.avif 480w, /photos/hero-paw-wide-800.avif 800w, /photos/hero-paw-wide-1200.avif 1200w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

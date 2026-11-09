@@ -1,0 +1,1449 @@
+/* The booking flow in a cream sheet over the page, with a navy header edged in honey (the groom card's edge). Values come from tokens.css. */
+
+/* ── The sheet: full screen on phones, a wide panel from the right from 960 px ── */
+
+.sheet {
+  position: fixed;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  overflow: hidden;
+}
+
+.sheet::backdrop {
+  background: var(--veil);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.sheet[open]::backdrop {
+  animation: fade var(--dur-sheet) var(--ease-soft) both;
+}
+
+.sheet__panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+}
+
+.sheet[open] .sheet__panel {
+  animation: sheet-up var(--dur-sheet) var(--ease-settle) both;
+}
+
+.sheet__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  position: relative;
+  padding: var(--space-3) var(--sheet-pad);
+  background: var(--forest);
+  color: var(--on-forest);
+}
+
+/* The honey edge along the foot of the header: the edge of a groom card (decorative). */
+.sheet__head::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: var(--edge);
+  background: var(--ply);
+}
+
+.sheet__titles {
+  display: grid;
+  gap: var(--hairline);
+  min-width: 0;
+}
+
+.sheet__business {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-glow);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sheet__title {
+  font-family: var(--font-display);
+  font-stretch: var(--stretch-display);
+  font-size: var(--text-xl);
+  font-weight: var(--heading-weight);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-tight);
+  color: var(--on-forest);
+}
+
+.sheet__title:focus {
+  outline: none;
+}
+
+.sheet .sheet__close {
+  flex: none;
+  border-color: var(--forest-line-strong);
+  color: var(--on-forest);
+}
+
+.sheet .sheet__close:hover {
+  background: var(--forest-3);
+}
+
+.sheet .sheet__close:focus-visible {
+  outline-color: var(--on-forest);
+}
+
+.sheet__body {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* No bottom padding here: sticky bars measure from it. The space lives on the content (below). */
+  padding: var(--space-5) var(--sheet-pad) 0;
+  scroll-padding-top: var(--sticky-offset);
+  /* Room for the pinned Continue / submit bar: focused fields and a chosen time stay above it. */
+  scroll-padding-bottom: calc(var(--control) + var(--space-7));
+}
+
+.sheet,
+.sheet__body {
+  --sheet-pad: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .sheet,
+  .sheet__body {
+    --sheet-pad: var(--space-6);
+  }
+}
+
+@media (min-width: 960px) {
+  .sheet,
+  .sheet__body {
+    --sheet-pad: var(--space-6);
+  }
+
+  .sheet__panel {
+    inset-inline-start: auto;
+    inline-size: min(var(--sheet-width), 100%);
+    border-radius: var(--radius-2) 0 0 var(--radius-2);
+    overflow: hidden;
+    box-shadow: var(--shadow-sheet);
+  }
+
+  .sheet[open] .sheet__panel {
+    animation-name: sheet-in;
+  }
+
+  .sheet__head {
+    padding-block: var(--space-4);
+  }
+
+  .sheet__body {
+    padding-top: var(--space-6);
+    scroll-padding-top: var(--space-6);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(var(--space-7));
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateX(var(--space-8));
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.flow--loading .skeleton--steps {
+  block-size: var(--space-6);
+}
+
+.flow--loading .skeleton--block {
+  block-size: var(--skeleton-block);
+}
+
+/* ── Step names ───────────────────────────────────────────── */
+
+.flow__steps {
+  display: none;
+  list-style: none;
+  padding: 0 0 var(--space-3);
+  gap: var(--space-5);
+  border-bottom: var(--hairline) solid var(--rule);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+.flow__steps li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.flow__step-n {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: var(--hairline) solid var(--line-input);
+  border-radius: var(--radius-1);
+  font-size: var(--text-micro);
+  font-variant-numeric: tabular-nums;
+}
+
+.flow__steps .is-current {
+  color: var(--ink);
+  font-weight: var(--weight-strong);
+}
+
+.flow__steps .is-current .flow__step-n {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.flow__steps .is-done .flow__step-n {
+  background: var(--sage-200);
+  border-color: var(--sage-200);
+  color: var(--ink);
+}
+
+.flow__counter {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (min-width: 720px) {
+  .flow__steps {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .flow__counter {
+    display: none;
+  }
+}
+
+.flow__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+.flow__main {
+  min-width: 0;
+}
+
+.flow__step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  animation: rise var(--dur-step) var(--ease-settle) both;
+}
+
+.step-title {
+  font-size: var(--text-step);
+  scroll-margin-top: var(--sticky-offset);
+}
+
+/* A focus target for screen readers and keyboard users (tabindex="-1"), not a control. */
+.step-title:focus {
+  outline: none;
+}
+
+@media (min-width: 960px) {
+  .flow__body {
+    grid-template-columns: minmax(0, 1fr) var(--summary-width);
+    column-gap: var(--space-6);
+    align-items: start;
+  }
+
+  .flow__main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .step-title {
+    scroll-margin-top: var(--space-6);
+  }
+}
+
+/* ── Summary: a card beside the flow; a sticky strip on phones ─ */
+
+.summary {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--oat);
+  border-radius: var(--radius-2);
+  border-top: var(--rule-strong) solid var(--accent);
+}
+
+.summary__title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.summary__hint {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.summary__list {
+  display: grid;
+}
+
+.summary__row {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-2);
+  border-bottom: var(--hairline) solid var(--rule);
+}
+
+.summary__row dt {
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+.summary__row dd {
+  color: var(--ink);
+  font-variant-numeric: lining-nums;
+}
+
+.summary__row--treatment dd {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-md);
+  line-height: var(--leading-tight);
+}
+
+.summary__zone {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.summary__pending {
+  color: var(--muted);
+}
+
+.summary__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-5);
+}
+
+@media (min-width: 960px) {
+  .summary {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (max-width: 959px) {
+  .summary {
+    position: sticky;
+    top: 0;
+    z-index: var(--layer-sticky);
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-1) var(--space-3);
+    margin-inline: calc(var(--sheet-pad, var(--space-4)) * -1);
+    padding: var(--space-2) var(--sheet-pad, var(--space-4));
+    background: var(--raised);
+    border-radius: 0;
+    border-top: 0;
+    border-bottom: var(--hairline) solid var(--rule);
+    box-shadow: var(--shadow-top);
+  }
+
+  .summary--empty,
+  .summary__title {
+    display: none;
+  }
+
+  .summary__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .summary__row {
+    display: inline;
+    padding: 0;
+    border: 0;
+  }
+
+  .summary__row dt {
+    position: absolute;
+    width: var(--hairline);
+    height: var(--hairline);
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .summary__row dd {
+    display: inline;
+  }
+
+  .summary__row--treatment dd {
+    font-family: var(--font-text);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-strong);
+  }
+
+  .summary__row:not(.summary__row--treatment):not(.summary__row--when) {
+    white-space: nowrap;
+  }
+
+  .summary__row:not(.summary__row--treatment):not(.summary__row--when) dd::before {
+    content: '·';
+    margin-inline-end: var(--space-2);
+    color: var(--muted);
+  }
+
+  .summary__row--date,
+  .summary__row--time,
+  .summary__row--includes,
+  .summary__wide,
+  .summary__change-time {
+    display: none;
+  }
+
+  .summary__row--when {
+    flex-basis: 100%;
+    color: var(--ink);
+  }
+}
+
+@media (min-width: 960px) {
+  .summary__row--when {
+    display: none;
+  }
+}
+
+/* ── Step 1: the treatment — the menu's shelves, as rows to tap ── */
+
+.pick-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+}
+
+.pick-group__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--hairline) solid var(--ink);
+  font-size: var(--text-lg);
+}
+
+.pick-lengths {
+  list-style: none;
+  padding: 0;
+  display: grid;
+}
+
+.pick {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto var(--space-5);
+  grid-template-areas:
+    'name meta arrow'
+    'desc desc desc';
+  align-items: baseline;
+  gap: var(--space-1) var(--space-4);
+  inline-size: 100%;
+  min-block-size: var(--control);
+  padding: var(--space-3);
+  border: 0;
+  border-bottom: var(--hairline) solid var(--rule);
+  border-radius: 0;
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--dur-quick) var(--ease-soft);
+}
+
+.pick::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--space-3);
+  inset-inline-start: 0;
+  inline-size: var(--rule-strong);
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform var(--dur-step) var(--ease-settle);
+}
+
+.pick:hover:not(:disabled) {
+  background: var(--accent-wash);
+}
+
+.pick:hover:not(:disabled)::before,
+.pick[aria-pressed='true']::before {
+  transform: none;
+}
+
+.pick[aria-pressed='true'] {
+  background: var(--accent-tint);
+}
+
+.pick:disabled {
+  cursor: progress;
+}
+
+.pick__name {
+  grid-area: name;
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: 1.0625rem;
+  letter-spacing: var(--heading-tracking);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+}
+
+.pick__meta {
+  grid-area: meta;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  white-space: nowrap;
+}
+
+.pick__duration {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pick__price {
+  font-family: var(--font-display);
+  font-stretch: var(--stretch-display);
+  font-size: var(--text-md);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.pick__arrow {
+  grid-area: arrow;
+  justify-self: end;
+  color: var(--accent);
+  transition: transform var(--dur-quick) var(--ease-settle);
+}
+
+.pick:hover .pick__arrow {
+  transform: translateX(var(--space-1));
+}
+
+.pick__desc {
+  grid-area: desc;
+  font-size: var(--text-sm);
+  color: var(--muted);
+  max-width: 54ch;
+}
+
+/* Narrow phones: the length and price drop under the name. */
+@media (max-width: 479px) {
+  .pick {
+    grid-template-columns: minmax(0, 1fr) var(--space-5);
+    grid-template-areas:
+      'name arrow'
+      'meta meta'
+      'desc desc';
+  }
+}
+
+/* ── Step 2: the calendar ─────────────────────────────────── */
+
+.time-step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.cal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.cal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.cal__month {
+  font-family: var(--font-display);
+  font-stretch: var(--stretch-display);
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.cal__soonest {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.cal__soonest-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.soon-chip {
+  min-block-size: var(--tap);
+  padding-inline: var(--space-4);
+  border: var(--hairline) solid var(--line-soft);
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--dur-quick) var(--ease-soft);
+}
+
+.soon-chip:hover {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+}
+
+.soon-chip[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.cal__grid {
+  display: none;
+  inline-size: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.cal__grid th {
+  padding-bottom: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-button);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cal__grid td {
+  padding: var(--space-1) 0;
+  text-align: center;
+}
+
+.day {
+  display: inline-grid;
+  justify-items: center;
+  align-content: center;
+  inline-size: 100%;
+  min-block-size: var(--day-cell);
+  padding: var(--space-1) 0;
+  border: var(--hairline) solid transparent;
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease-soft),
+    border-color var(--dur-quick) var(--ease-soft);
+}
+
+.day__num {
+  line-height: var(--leading-tight);
+}
+
+.day__mark,
+.day-card__mark {
+  display: grid;
+  place-items: center;
+  min-block-size: var(--space-4);
+  font-size: var(--text-micro);
+  line-height: var(--leading-tight);
+}
+
+.day__dot {
+  inline-size: var(--dot);
+  block-size: var(--dot);
+  border-radius: var(--radius-1);
+  background: var(--mark);
+}
+
+.day__few {
+  color: var(--ink-soft);
+}
+
+.day__word {
+  color: var(--muted);
+}
+
+.day:hover:not(:disabled) {
+  border-color: var(--line-input);
+}
+
+.day[data-today] {
+  box-shadow: inset 0 0 0 var(--hairline) var(--rule);
+}
+
+.day[data-outside] .day__num {
+  color: var(--muted);
+}
+
+.day[data-status='full'] .day__num,
+.day-card[data-status='full'] .day-card__num {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-thickness: var(--hairline);
+}
+
+.day[data-status='closed'] .day__num {
+  color: var(--muted);
+}
+
+.day:disabled {
+  cursor: default;
+}
+
+.day:disabled .day__num {
+  color: var(--muted);
+  opacity: 0.45;
+}
+
+.day[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.day[aria-pressed='true'] .day__num,
+.day[aria-pressed='true'] .day__few,
+.day[aria-pressed='true'] .day__word {
+  color: var(--on-accent);
+}
+
+.day[aria-pressed='true'] .day__dot {
+  background: var(--on-accent);
+}
+
+/* Phones: a row of day cards */
+
+.rail {
+  min-width: 0;
+  margin-inline: calc(var(--sheet-pad, var(--space-4)) * -1);
+}
+
+.rail .quiet-state {
+  padding-inline: var(--sheet-pad, var(--space-4));
+}
+
+.rail__list {
+  position: relative;
+  display: flex;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1) var(--sheet-pad, var(--space-4)) var(--space-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.rail__list::-webkit-scrollbar {
+  display: none;
+}
+
+.rail__list li {
+  flex: none;
+  scroll-snap-align: center;
+}
+
+.day-card {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-1);
+  inline-size: var(--day-card-w);
+  block-size: var(--day-card-h);
+  padding: 0;
+  border: var(--hairline) solid var(--line-soft);
+  border-radius: var(--radius-2);
+  background: var(--raised);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color var(--dur-quick) var(--ease-soft);
+}
+
+.day-card--skeleton {
+  display: block;
+  border-color: transparent;
+  background: var(--oat);
+}
+
+.day-card__weekday {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-button);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.day-card__num {
+  font-family: var(--font-display);
+  font-stretch: var(--stretch-display);
+  font-size: var(--text-xl);
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+}
+
+.day-card[data-status='closed'] {
+  background: var(--paper);
+  border-style: dashed;
+}
+
+.day-card[data-status='closed'] .day-card__num {
+  color: var(--muted);
+}
+
+.day-card[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.day-card[aria-pressed='true'] .day-card__weekday,
+.day-card[aria-pressed='true'] .day-card__num,
+.day-card[aria-pressed='true'] .day__few,
+.day-card[aria-pressed='true'] .day__word {
+  color: var(--on-accent);
+}
+
+.day-card[aria-pressed='true'] .day__dot {
+  background: var(--on-accent);
+}
+
+@media (min-width: 720px) {
+  .cal__grid {
+    display: table;
+  }
+
+  .cal__soonest {
+    display: flex;
+  }
+
+  .rail {
+    display: none;
+  }
+}
+
+/* ── Step 2: the times ────────────────────────────────────── */
+
+.times-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.times-block--loading .skeleton--parts {
+  block-size: var(--tap);
+}
+
+.times-block--loading .skeleton--times {
+  block-size: var(--skeleton-times);
+}
+
+.parts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: var(--hairline) solid var(--rule);
+}
+
+.part {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: var(--tap);
+  padding: var(--space-2) var(--space-1);
+  margin-bottom: calc(var(--hairline) * -1);
+  border: 0;
+  border-bottom: var(--rule-strong) solid transparent;
+  background: none;
+  color: var(--muted);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+  transition:
+    color var(--dur-quick) var(--ease-soft),
+    border-color var(--dur-quick) var(--ease-soft);
+}
+
+.part:hover:not(:disabled) {
+  color: var(--ink);
+}
+
+.part[aria-pressed='true'] {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+.part:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.part__count {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--space-5);
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-1);
+  background: var(--oat);
+  color: var(--ink-soft);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 379px) {
+  .part {
+    flex-direction: column;
+    gap: 0;
+    padding-block: var(--space-1);
+  }
+}
+
+.part[aria-pressed='true'] .part__count {
+  background: var(--sage-200);
+  color: var(--ink);
+}
+
+.times {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--time-min), 1fr));
+  gap: var(--space-2);
+}
+
+.time {
+  inline-size: 100%;
+  min-block-size: var(--chip);
+  padding: 0 var(--space-2);
+  border: var(--hairline) solid var(--line-soft);
+  border-radius: var(--radius-1);
+  background: var(--raised);
+  color: var(--ink);
+  font-variant-numeric: lining-nums;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease-soft),
+    border-color var(--dur-quick) var(--ease-soft),
+    color var(--dur-quick) var(--ease-soft);
+}
+
+.time:hover {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.time[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.day-state {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  background: var(--paper);
+  border-left: var(--rule-strong) solid var(--line-input);
+}
+
+.day-state__lead {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.zone-note {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* The chosen time and Continue: right after the times, and pinned to the foot of
+   the sheet whenever the times run below it, so the next step is always in reach. */
+.choice-bar {
+  border-radius: var(--radius-2);
+  position: sticky;
+  bottom: var(--space-3);
+  z-index: var(--layer-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  background: var(--raised);
+  border: var(--hairline) solid var(--rule);
+  box-shadow: var(--shadow-soft);
+  animation: rise var(--dur-step) var(--ease-settle) both;
+}
+
+.choice-bar__text {
+  display: grid;
+  line-height: var(--leading-tight);
+}
+
+.choice-bar__text span {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.choice-bar__text strong {
+  font-size: var(--text-md);
+  font-weight: var(--weight-strong);
+  color: var(--ink);
+  font-variant-numeric: lining-nums;
+}
+
+@media (max-width: 959px) {
+  .choice-bar {
+    position: sticky;
+    bottom: 0;
+    margin-inline: calc(var(--sheet-pad, var(--space-4)) * -1);
+    padding: var(--space-3) var(--sheet-pad, var(--space-4)) calc(var(--space-3) + env(safe-area-inset-bottom));
+    border-radius: 0;
+    border-inline: 0;
+  }
+}
+
+/* ── Step 3: details ──────────────────────────────────────── */
+
+.details,
+.code {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  max-width: var(--form-max);
+  margin-top: var(--space-3);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field label {
+  color: var(--ink);
+  font-weight: var(--weight-strong);
+}
+
+.field__optional {
+  color: var(--muted);
+  font-weight: var(--weight-text);
+}
+
+.field__hint {
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea {
+  inline-size: 100%;
+  min-block-size: var(--input);
+  padding: var(--space-2) var(--space-3);
+  border: var(--hairline) solid var(--line-input);
+  border-radius: var(--radius-1);
+  background: var(--raised);
+  color: var(--ink);
+  font-size: var(--text-md);
+  transition: border-color var(--dur-quick) var(--ease-soft);
+}
+
+.field textarea {
+  min-block-size: calc(var(--control) * 2);
+  line-height: var(--leading-body);
+  resize: vertical;
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: var(--ink-soft);
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: 0;
+  border-color: var(--accent);
+}
+
+.field input[aria-invalid='true'],
+.field textarea[aria-invalid='true'] {
+  border-color: var(--clay);
+}
+
+.field__error {
+  color: var(--clay);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-strong);
+}
+
+.field__info {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.field__count {
+  min-block-size: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--muted);
+  text-align: end;
+}
+
+.field__count--over {
+  color: var(--clay);
+}
+
+.step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+}
+
+/* Details: the submit row stays pinned to the foot of the sheet while the form scrolls. */
+.details .step-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--layer-sticky);
+  padding-block: var(--space-3) calc(var(--space-3) + env(safe-area-inset-bottom));
+  background: var(--paper);
+  border-top: var(--hairline) solid var(--rule);
+  box-shadow: 0 -1rem 1rem -1rem var(--scrim);
+  column-gap: var(--space-5);
+}
+
+.fine-print {
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+/* ── Step 4: the code ─────────────────────────────────────── */
+
+.code__sent {
+  font-size: var(--text-lg);
+}
+
+.code__sent strong {
+  color: var(--ink);
+  font-weight: var(--weight-strong);
+}
+
+.code__preview {
+  padding: var(--space-3) var(--space-4);
+  background: var(--oat);
+  border-left: var(--rule-strong) solid var(--mark);
+  font-size: var(--text-sm);
+  color: var(--ink);
+}
+
+.field--code input.code__input {
+  inline-size: min(100%, var(--code-width));
+  min-block-size: var(--code-height);
+  padding-inline: var(--space-3);
+  font-size: var(--text-code);
+  letter-spacing: var(--tracking-code);
+  text-indent: var(--tracking-code);
+  text-align: center;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.code__more {
+  display: grid;
+  gap: 0;
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid var(--rule);
+}
+
+.code__wait {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.code__resend .code__wait {
+  margin-top: calc(var(--space-2) * -1);
+  margin-bottom: var(--space-2);
+}
+
+/* ── Done ─────────────────────────────────────────────────── */
+
+.done {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+  max-width: var(--form-max);
+  animation: rise var(--dur-step) var(--ease-settle) both;
+}
+
+.done__mark {
+  position: relative;
+  inline-size: var(--space-7);
+  block-size: var(--space-7);
+  border: var(--hairline) solid var(--accent);
+  border-radius: var(--radius-1);
+}
+
+.done__mark::after {
+  content: '';
+  position: absolute;
+  left: 38%;
+  top: 24%;
+  inline-size: 24%;
+  block-size: 44%;
+  border-right: var(--rule-strong) solid var(--accent);
+  border-bottom: var(--rule-strong) solid var(--accent);
+  transform: rotate(45deg);
+}
+
+.done__details {
+  inline-size: 100%;
+  border-top: var(--hairline) solid var(--ink);
+}
+
+.done__details > div {
+  display: grid;
+  grid-template-columns: var(--label-col) minmax(0, 1fr);
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  border-bottom: var(--hairline) solid var(--rule);
+}
+
+.done__details dt {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.done__details dd {
+  color: var(--ink);
+}
+
+.done__reference {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-tag);
+}
+
+/* ── Contact instead of the flow ──────────────────────────── */
+
+.contact-instead {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  max-width: var(--form-max);
+}
+
+.contact-instead__title {
+  font-size: var(--text-xl);
+}
+
+.contact-instead__list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* ── Density inside the sheet: calmer spacing, less height ── */
+
+.sheet {
+  --day-cell: 2.75rem; /* 44 px: the smallest tap target */
+}
+
+.sheet .field {
+  gap: 0.375rem;
+}
+
+.sheet .field textarea {
+  min-block-size: calc(var(--input) * 1.75);
+}
+
+.sheet .zone-note {
+  margin-top: var(--space-3);
+}
+
+.sheet .cal__grid td {
+  padding-block: var(--hairline);
+}
+
+.sheet .cal__grid th {
+  padding-bottom: var(--space-1);
+}
+
+.sheet .summary {
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+}
+
+.sheet .summary__row {
+  padding-block: 0.3125rem;
+}
+
+@media (min-width: 960px) {
+  .sheet__head {
+    padding-block: var(--space-3);
+  }
+
+  .sheet__title {
+    font-size: var(--text-sheet);
+  }
+
+  .sheet__body {
+    padding-top: var(--space-5);
+  }
+
+  .sheet .summary {
+    top: 0;
+  }
+}
+
+/* The breathing room at the foot of the sheet (see .sheet__body). */
+.sheet__body > * {
+  padding-bottom: var(--space-7);
+}
+
+/* ── Groom Card additions ── */
+
+/* Who a service is for, under its description in the service step. */
+.pick__includes {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.pick__includes-label {
+  margin-right: var(--space-1);
+  color: var(--ink);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+}
+
+/* Durations and prices: tabular figures. */
+.pick__duration,
+.pick__price {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The dog size beside a service's name in the service step. */
+.pick__name .pick__size {
+  margin-left: var(--space-2);
+  vertical-align: 0.1em;
+}
+
+/* A starting price, said plainly in the summary (the phone strip keeps to one line: "from $110"). */
+.summary__price-note {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-text);
+  color: var(--muted);
+}
+
+/* The honest line about coat condition after a request. */
+.done__note {
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-1);
+  background: var(--oat);
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 959px) {
+  .summary__price-note {
+    display: none;
+  }
+}
+
+/* "2 h 30 min" reads as written, not in capitals. */
+.pick__duration {
+  text-transform: none;
+  letter-spacing: 0;
+}
