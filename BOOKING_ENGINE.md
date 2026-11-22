@@ -21,7 +21,9 @@ Connect Supabase and email: `npx booking-engine connect` (INTEGRATION.md §11)
   "Choose another time" (`cancelBookingRequest()`, then reload availability).
 - Handle `ok: false` on every engine call (see the error table in INTEGRATION.md).
 - Show success only when `verifyBooking()` returned `ok: true`, and say whether the
-  booking is a request (`pending`, the business will confirm) or `confirmed`.
+  booking is a request (`pending`, the business will confirm) or `confirmed`. Say
+  "booked" only when `status === 'confirmed'`; `BOOKING_INACTIVE` (declined or lapsed
+  meanwhile) is never a success.
 - When `business.policies.onlineBookingEnabled` is false, show contact details instead of the form.
 - Every Book button on the page reaches the booking section in every state (also while
   booking is off, loading or failed) — never a click that does nothing.

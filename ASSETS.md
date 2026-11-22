@@ -39,7 +39,7 @@ consent) your clients' dogs.**
 
 | Package | Licence | Notes |
 |---|---|---|
-| `@profitstudio/booking-engine` 2.0.0-beta.3 | MIT | The booking engine and the packaged dashboard |
+| `@profitstudio/booking-engine` 2.0.0-beta.4 | MIT | The booking engine and the packaged dashboard |
 | `react`, `react-dom` | MIT | |
 | `@fontsource/young-serif` | OFL-1.1 | Typeface (Young Serif — The Young Serif Project Authors, github.com/noirblancrouge/YoungSerif) |
 | `@fontsource-variable/figtree` | OFL-1.1 | Typeface (Figtree — The Figtree Project Authors, github.com/erikdkennedy/figtree) |

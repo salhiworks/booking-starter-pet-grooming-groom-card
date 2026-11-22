@@ -36,6 +36,7 @@ import type { Details, FieldErrors } from './details';
 import { formField, reducedMotion, sentence } from './details';
 import { Done } from './Done';
 import type { Outcome } from './Done';
+import { answerOf, inactiveText, isInactive, referenceOf } from '../../lib/bookingStatus';
 import { Summary } from './Summary';
 import { TimePicker } from './TimePicker';
 
@@ -220,13 +221,28 @@ export function BookingFlow({ business, services, intent, onServicesStale }: Boo
   };
 
   /** The request ended at the code step: back to the times (the details stay), fresh availability. */
-  const backToTimes = async (text: string) => {
+  const backToTimes = async (text: string, contact = false) => {
     setPending(null);
     setSlot(null);
     setCode('');
-    setNotice({ tone: 'error', text });
+    setNotice({ tone: 'error', text, contact });
     go('time');
     if (serviceId) await loadAvailability(month, serviceId, 'keep');
+  };
+
+  /**
+   * The code was accepted earlier, but the request is no longer active — the
+   * business declined or cancelled it, or it was not confirmed in time (engine
+   * BOOKING_INACTIVE). It is never a booking: forget the code so no recovery path
+   * verifies it again, and go back to the times with the business's contact details.
+   */
+  const requestInactive = async (reference: string | null) => {
+    lastCode.current = '';
+    autoSubmitted.current = '';
+    setCodeError(null);
+    setCodeInfo(null);
+    setOutcome(null);
+    await backToTimes(inactiveText(reference), true);
   };
 
   // ── Step 4: the code → verifyBooking ───────────────────────────────
@@ -243,12 +259,21 @@ export function BookingFlow({ business, services, intent, onServicesStale }: Boo
     const result = await safely(() => engine.verifyBooking({ requestId: pending.requestId, code: value }));
     setBusy(null);
     if (result.ok) {
+      // Booked only when confirmed, a request only when pending: anything else is not an appointment.
+      if (answerOf(result.data) === 'inactive') {
+        await requestInactive(result.data.reference);
+        return;
+      }
       setOutcome({ kind: 'booked', confirmation: result.data, email: pending.email });
       setPending(null);
       go('done');
       return;
     }
     const error = result.error;
+    if (isInactive(error)) {
+      await requestInactive(referenceOf(error));
+      return;
+    }
     switch (error.code) {
       case 'PREVIEW_MODE':
         setOutcome({ kind: 'preview' });
