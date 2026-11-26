@@ -1,7 +1,7 @@
 {
   "package": "@profitstudio/booking-engine",
-  "version": "2.0.0-beta.4",
-  "schemaVersion": "2.0.0-beta.4",
+  "version": "2.0.0",
+  "schemaVersion": "2.0.0-beta.5",
   "migrations": [
     {
       "id": "0001_core",
@@ -56,6 +56,24 @@
       "file": "supabase/migrations/20261122152706_booking_engine_0009_reliable_answers.sql",
       "sha256": "ec4300201569a87451e05bf3fddecc1762fd28683cd3fbb98c0b13866a3b1774",
       "schemaVersion": "2.0.0-beta.4"
+    },
+    {
+      "id": "0010_customer_data_erasure",
+      "file": "supabase/migrations/20261126225930_booking_engine_0010_customer_data_erasure.sql",
+      "sha256": "1e22ca7dc0879da157732138e83d49038edd897be29c29460a2b6a47b45127d4",
+      "schemaVersion": "2.0.0-beta.5"
+    },
+    {
+      "id": "0011_reliable_email_and_search",
+      "file": "supabase/migrations/20261126225931_booking_engine_0011_reliable_email_and_search.sql",
+      "sha256": "c76431dfc1fb3f19d7f991f3fdafcebb69846c5adc98c19532e7baf1f4b9035a",
+      "schemaVersion": "2.0.0-beta.5"
+    },
+    {
+      "id": "0012_component_versions",
+      "file": "supabase/migrations/20261126225932_booking_engine_0012_component_versions.sql",
+      "sha256": "f10553d990deefee61ee55f0102841ee7f9abf83f9a50cb005e2f208649c7408",
+      "schemaVersion": "2.0.0-beta.5"
     }
   ],
   "functions": {
@@ -63,9 +81,10 @@
       "files": {
         "deno.json": "c25c8af2f700c9c4cfb5a196599bfeb99c854a0569f44c12a2e25d41bda27363",
         "index.ts": "1423dd378fcb992bb68946e5e21d65feacdb22b69402d8e573c06b5b6d4c5f2c",
-        "mailer.js": "11c53e03288c9e757dc994a0e9505fd6f46dbb131d23af20782b683073c361ac",
+        "mailer.js": "e9fa5e71d2dcacb14267494bba46d9700a1218b4c1e69582c68bef78db084521",
         "providers/index.js": "ee8198ff49270aeb2b5a7b25a6dafc9238c4f4efcd48a4e3f478f94540d1a37f",
         "providers/resend.js": "2c27d90fbfb1f905f2ec607eabea9ef8f64f8d8b337be8aba54011ecccbdb783",
+        "revision.js": "44dc4b794cd572f0d2c9ee8245fa69afc7266ebe02a1f862825292c305742560",
         "templates.js": "f045094490f3f86ddd2939ac3de965f3a64b1b161225dc7f9655a65f44d42de9"
       }
     }

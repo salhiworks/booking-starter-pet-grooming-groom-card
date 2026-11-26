@@ -27,7 +27,13 @@ Connect Supabase and email: `npx booking-engine connect` (INTEGRATION.md §11)
 - When `business.policies.onlineBookingEnabled` is false, show contact details instead of the form.
 - Every Book button on the page reaches the booking section in every state (also while
   booking is off, loading or failed) — never a click that does nothing.
-- Keep the packaged admin dashboard on `/admin/` (`admin/index.html`).
+- Keep the packaged admin dashboard on `/admin/` (`admin/index.html`). Its sign-in,
+  "Forgot password?" and Account & privacy screens come with the engine; password
+  reset links open `/admin/` once the Supabase Site URL is the dashboard's address
+  (INTEGRATION.md §11). Its Updates section asks the public npm registry for newer
+  releases: a Content-Security-Policy, if the site has one, allows
+  `connect-src https://registry.npmjs.org` (docs/UPDATES.md). Upgrading is always the
+  owner's decision, in this project (INTEGRATION.md §13) — never install one unasked.
 - Make text, photos, the logo, brand colours or the heading style owner-editable by
   declaring a field in the site's content schema (`defineSiteContent`, passed to
   `<BookingAdmin content>`) and rendering its resolved value; the dashboard's Website
@@ -44,7 +50,8 @@ Connect Supabase and email: `npx booking-engine connect` (INTEGRATION.md §11)
 - Compute availability in the browser, skip the code step or fake a confirmation
   (preview mode saves nothing and sends no email).
 - Send booking emails from the website or add another email service: the engine sends them.
-- Rebuild or fork the admin dashboard.
+- Rebuild or fork the admin dashboard, or handle Supabase Auth links (`#access_token=…`)
+  and call `supabase.auth` in the website: the dashboard does it.
 - Render owner content as HTML (`dangerouslySetInnerHTML`, `innerHTML`) or build image
   URLs yourself: render text as text, images from the resolved `src`/`alt`.
 - Put services, prices, hours, the address, phone or email in the content schema:

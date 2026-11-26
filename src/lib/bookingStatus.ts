@@ -1,4 +1,4 @@
-// The engine's booking answers, read strictly (Booking Engine 2.0.0-beta.4
+// The engine's booking answers, read strictly (Booking Engine 2.0.0
 // contract, the version every starter pins).
 //
 //   status 'confirmed'        → the appointment is booked
