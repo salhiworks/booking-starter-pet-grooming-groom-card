@@ -4,7 +4,7 @@ A one-page booking website for an independent dog grooming studio, shipped as **
 Grooming Studio** (a fictional, one-dog-at-a-time grooming studio in Linden Hills,
 Minneapolis) for the owner to make their own. Its identity lives in `src/site.config.ts`;
 `CUSTOMIZE.md` is the prompt that personalizes it. Built around
-**@profitstudio/booking-engine** **2.0.0** (pinned; lock in `booking-engine.lock.json`).
+**@profitstudio/booking-engine** **2.0.1** (pinned; lock in `booking-engine.lock.json`).
 The engine owns booking; this project owns the public design.
 
 Read before changing anything:

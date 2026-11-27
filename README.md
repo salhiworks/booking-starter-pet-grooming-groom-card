@@ -27,7 +27,7 @@ grounds, navy ink, honey for small edges, one brand colour (cobalt by default) f
 everything you can press; Young Serif headlines over Figtree; soft, card-stock corners.
 
 Booking runs on [`@profitstudio/booking-engine`](https://www.npmjs.com/package/@profitstudio/booking-engine)
-**2.0.0** (pinned) with your own Supabase project and Resend for email.
+**2.0.1** (pinned) with your own Supabase project and Resend for email.
 
 ## 1. Try it (no accounts needed)
 

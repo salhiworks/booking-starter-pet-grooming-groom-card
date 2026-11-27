@@ -4,7 +4,7 @@ import type { Service } from '@profitstudio/booking-engine';
 /**
  * The grooming menu's kinds and sizes, and who each service is for.
  *
- * The engine (2.0.0) has no service categories, no size or weight
+ * The engine (2.0.1) has no service categories, no size or weight
  * pricing and no per-service metadata, and a service's id is a database UUID
  * this site cannot know when it is built — so everything here is read from the
  * service's own engine data:
